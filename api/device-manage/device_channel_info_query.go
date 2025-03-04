@@ -65,13 +65,12 @@ type ChannelInfoQueryReply struct {
 // ChannelInfoQuery 设备通道信息查询
 func (p *Manager) ChannelInfoQuery() (*ChannelInfoQueryReply, error) {
 	// 获取Socket连接
-	connInfo := p.connInstance.Lock()
+	client := p.connInstance.LockHttpClient()
 	defer p.connInstance.Unlock()
 
 	// 发送请求
 	var reply ChannelInfoQueryReply
-	_, err := connInfo.HttpClient().
-		Get("/SDCAPI/V1.0/CnsPaas/ChnQury").
+	_, err := client.Get("/SDCAPI/V1.0/CnsPaas/ChnQury").
 		SetContentType("application/x-www-form-urlencoded").
 		DecodeJSON(&reply)
 

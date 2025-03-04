@@ -75,13 +75,12 @@ type AddSubscribeReply = common.Response[AddSubscribeReplyData]
 //	@return 订阅ID
 func (p *Manager) AddSubscribe(params AddSubscribeParams) (int, error) {
 	// 获取Socket连接
-	connInfo := p.connInstance.Lock()
+	client := p.connInstance.LockHttpClient()
 	defer p.connInstance.Unlock()
 
 	// 发送请求
 	var reply AddSubscribeReply
-	_, err := connInfo.HttpClient().
-		Post("/SDCAPI/V2.0/Metadata/Subscription").
+	_, err := client.Post("/SDCAPI/V2.0/Metadata/Subscription").
 		SetJSON(&params).
 		DecodeJSON(&reply)
 	if err != nil {

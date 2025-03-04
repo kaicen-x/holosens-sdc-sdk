@@ -74,13 +74,12 @@ type BaseInfoQueryReply struct {
 //	@param channelID: 通道ID，针对复眼款型可用，普通款型无需传入此参数，或传入101。取值范围：101 - 定点信息，102- 复眼全景路信息。
 func (p *Manager) BaseInfoQuery(channelID int) (*BaseInfoQueryReply, error) {
 	// 获取Socket连接
-	connInfo := p.connInstance.Lock()
+	client := p.connInstance.LockHttpClient()
 	defer p.connInstance.Unlock()
 
 	// 发送请求
 	var reply BaseInfoQueryReply
-	_, err := connInfo.HttpClient().
-		Get("/SDCAPI/V1.0/MiscIaas/System").
+	_, err := client.Get("/SDCAPI/V1.0/MiscIaas/System").
 		SetQuery("ChannelID", strconv.Itoa(channelID)).
 		SetContentType("application/x-www-form-urlencoded").
 		DecodeJSON(&reply)

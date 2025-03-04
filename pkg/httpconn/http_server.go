@@ -1,20 +1,25 @@
 package httpconn
 
-import "time"
+import (
+	"net"
+	"time"
+)
 
 // HttpServer 基于Socket连接的HTTP服务端
 type HttpServer struct {
-	_connInfo    *ConnectInfo  // Socket连接信息
-	readTimeout  time.Duration // 请求响应超时时间
-	writeTimeout time.Duration // 请求发送超时时间
+	conn         net.Conn      // Socket连接通道
+	readTimeout  time.Duration // 消息读取超时时间
+	writeTimeout time.Duration // 消息发送超时时间
+
+	priProtoHead *PrivateProtocolHead // 私有协议头配置
 }
 
 // NewHttpServer 创建基于Socket连接的HTTP服务端
-func NewHttpServer(cii *ConnectInfo) *HttpServer {
+func NewHttpServer(conn net.Conn) *HttpServer {
 	return &HttpServer{
-		_connInfo:    cii,
-		readTimeout:  0,
-		writeTimeout: 0,
+		conn:         conn,
+		readTimeout:  time.Second * 30,
+		writeTimeout: time.Second * 30,
 	}
 }
 
@@ -22,6 +27,14 @@ func NewHttpServer(cii *ConnectInfo) *HttpServer {
 func (s *HttpServer) SetReadTimeout(readTimeout, writeTimeout time.Duration) *HttpServer {
 	s.readTimeout = readTimeout
 	s.writeTimeout = writeTimeout
+	return s
+}
+
+// SetPrivateProtocolHead 设置私有协议头
+func (s *HttpServer) SetPrivateProtocolHead(opt PrivateProtocolHead) *HttpServer {
+	// 克隆协议
+	s.priProtoHead = opt.Clone()
+	// OK
 	return s
 }
 

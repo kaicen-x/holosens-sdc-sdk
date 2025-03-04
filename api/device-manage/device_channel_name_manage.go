@@ -25,13 +25,12 @@ type ChannelNameQueryReply = []ChannelNameInfo
 //	@param	uuid: 通道UUID
 func (p *Manager) ChannelNameQuery(uuid string) (ChannelNameQueryReply, error) {
 	// 获取Socket连接
-	connInfo := p.connInstance.Lock()
+	client := p.connInstance.LockHttpClient()
 	defer p.connInstance.Unlock()
 
 	// 发送请求
 	var reply ChannelNameQueryReply
-	_, err := connInfo.HttpClient().
-		Get("/SDCAPI/V1.0/CnsPaas/ChnQury/CnsChnParam").
+	_, err := client.Get("/SDCAPI/V1.0/CnsPaas/ChnQury/CnsChnParam").
 		SetQuery("uuid", uuid).
 		SetContentType("application/x-www-form-urlencoded").
 		DecodeJSON(&reply)
@@ -57,13 +56,12 @@ type ChannelNameSettingReply = common.Response[common.ResponseStatus]
 //	@param	params: 配置参数
 func (p *Manager) ChannelNameSetting(uuid string, params ChannelNameSettingParams) error {
 	// 获取Socket连接
-	connInfo := p.connInstance.Lock()
+	client := p.connInstance.LockHttpClient()
 	defer p.connInstance.Unlock()
 
 	// 发送请求
 	var reply ChannelNameSettingReply
-	_, err := connInfo.HttpClient().
-		Put("/SDCAPI/V1.0/CnsPaas/ChnQury/CnsChnParam").
+	_, err := client.Put("/SDCAPI/V1.0/CnsPaas/ChnQury/CnsChnParam").
 		SetQuery("uuid", uuid).
 		SetJSON(&params).
 		DecodeJSON(&reply)

@@ -11,10 +11,10 @@ import (
 
 // HttpClientRequest HTTP自定义客户端请求对象
 type HttpClientRequest struct {
-	_client   *HttpClient   // 客户端
-	_cacheErr error         // 缓存链式调用中间产生的异常
-	req       *http.Request // HTTP原生请求对象
-	query     url.Values    // Query参数临时缓存一下（有助于提高性能）
+	cli   *HttpClient   // 客户端
+	req   *http.Request // HTTP原生请求对象
+	query url.Values    // Query参数临时缓存一下（有助于提高性能）
+	err   error         // 缓存链式调用中间产生的异常
 }
 
 // NewHttpClientRequest 创建HTTP自定义客户端请求对象
@@ -23,10 +23,10 @@ func NewHttpClientRequest(client *HttpClient, method, url string) *HttpClientReq
 	req, err := http.NewRequest(method, url, nil)
 	// 构建HTTP自定义客户端请求对象
 	return &HttpClientRequest{
-		_client:   client,
-		_cacheErr: err,
-		req:       req,
-		query:     nil,
+		cli:   client,
+		err:   err,
+		req:   req,
+		query: nil,
 	}
 }
 
@@ -120,7 +120,7 @@ func (r *HttpClientRequest) SetJSON(data any) *HttpClientRequest {
 	// json编码数据
 	dataBytes, err := json.Marshal(data)
 	if err != nil {
-		r._cacheErr = errors.Join(r._cacheErr, err)
+		r.err = errors.Join(r.err, err)
 		return r
 	}
 	// 设置请求体
@@ -136,14 +136,14 @@ func (r *HttpClientRequest) Send() (*http.Response, error) {
 	// 提取原生请求对象
 	req := r.req
 	if req == nil {
-		return nil, errors.Join(r._cacheErr, errors.New("request is nil"))
+		return nil, errors.Join(r.err, errors.New("request is nil"))
 	}
 	// 检查是否存在缓存错误
-	if r._cacheErr != nil {
+	if r.err != nil {
 		if req.Body != nil {
 			req.Body.Close() // 提前结束需要手动释放Body
 		}
-		return nil, r._cacheErr
+		return nil, r.err
 	}
 	// 检查URL是否有效
 	if req.URL == nil {
@@ -157,12 +157,12 @@ func (r *HttpClientRequest) Send() (*http.Response, error) {
 		req.URL.RawQuery = r.query.Encode()
 	}
 	// 发送请求
-	err := writeHttpRequest(r._client._connInfo, req)
+	err := writeHttpRequest(r.cli, req)
 	if err != nil {
 		return nil, err
 	}
 	// 读取响应
-	res, err := readHttpResponse(r._client._connInfo, req)
+	res, err := readHttpResponse(r.cli, req)
 	if err != nil {
 		return nil, err
 	}

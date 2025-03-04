@@ -43,20 +43,18 @@ type InitiativeRegisterReply = common.Response[common.ResponseStatus]
 // InitiativeRegister 设备主动注册（该接口通常无需外部调用）
 func (p *Manager) InitiativeRegister() (*InitiativeRegisterParams, error) {
 	// 获取Socket连接
-	connInfo := p.connInstance.Lock()
+	server := p.connInstance.LockHttpServer()
 	defer p.connInstance.Unlock()
 
 	// 读取设备注册信息
 	var params InitiativeRegisterParams
-	reader := connInfo.HttpServer().Reader()
+	reader := server.Reader()
 	err := reader.BindJSON(&params)
 	if err != nil {
 		// 构建通用响应
 		res := common.NewResponseWithFailed(reader.RawRequest())
 		// 响应失败结果
-		err = connInfo.HttpServer().Writer().
-			SetStatusCode(http.StatusOK).
-			JSON(res)
+		err = server.Writer().JSON(http.StatusOK, res)
 		if err != nil {
 			return nil, err
 		}
@@ -66,9 +64,7 @@ func (p *Manager) InitiativeRegister() (*InitiativeRegisterParams, error) {
 	// 构建通用响应
 	res := common.NewResponseWithSuccess(reader.RawRequest())
 	// 响应成功结果
-	err = connInfo.HttpServer().Writer().
-		SetStatusCode(http.StatusOK).
-		JSON(res)
+	err = server.Writer().JSON(http.StatusOK, res)
 	if err != nil {
 		return nil, err
 	}

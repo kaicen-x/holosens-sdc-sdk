@@ -13,13 +13,12 @@ type ActivateStatusQueryReply struct {
 // ActivateStatusQuery 设备激活状态查询
 func (p *Manager) ActivateStatusQuery() (*ActivateStatusQueryReply, error) {
 	// 获取Socket连接
-	connInfo := p.connInstance.Lock()
+	client := p.connInstance.LockHttpClient()
 	defer p.connInstance.Unlock()
 
 	// 发送请求
 	var reply ActivateStatusQueryReply
-	_, err := connInfo.HttpClient().
-		Get("/SDCAPI/V1.0/AuthIaas/ActivaionStatus").
+	_, err := client.Get("/SDCAPI/V1.0/AuthIaas/ActivaionStatus").
 		SetContentType("application/x-www-form-urlencoded").
 		DecodeJSON(&reply)
 	if err != nil {

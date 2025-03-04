@@ -25,13 +25,12 @@ type IdQueryReply struct {
 // IdQuery 设备ID查询
 func (p *Manager) IdQuery() (*IdQueryReply, error) {
 	// 获取Socket连接
-	connInfo := p.connInstance.Lock()
+	client := p.connInstance.LockHttpClient()
 	defer p.connInstance.Unlock()
 
 	// 发送请求
 	var reply IdQueryReply
-	_, err := connInfo.HttpClient().
-		Get("/SDCAPI/V1.0/Rest/DeviceID").
+	_, err := client.Get("/SDCAPI/V1.0/Rest/DeviceID").
 		SetContentType("application/x-www-form-urlencoded").
 		DecodeJSON(&reply)
 	if err != nil {
@@ -55,13 +54,12 @@ type IdSettingReply = common.Response[common.ResponseStatus]
 //	@param	params: 配置参数
 func (p *Manager) IdSetting(params IdSettingParams) error {
 	// 获取Socket连接
-	connInfo := p.connInstance.Lock()
+	client := p.connInstance.LockHttpClient()
 	defer p.connInstance.Unlock()
 
 	// 发送请求
 	var reply IdSettingReply
-	_, err := connInfo.HttpClient().
-		Put("/SDCAPI/V1.0/Rest/DeviceID").
+	_, err := client.Put("/SDCAPI/V1.0/Rest/DeviceID").
 		SetJSON(&params).
 		DecodeJSON(&reply)
 	if err != nil {

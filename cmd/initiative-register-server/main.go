@@ -42,7 +42,7 @@ func main() {
 		// 处理每个连接
 		go func() {
 			// 构建设备连接实例
-			instance, err := holosenssdcsdk.NewDeviceConnect(conn)
+			instance, err := holosenssdcsdk.NewDeviceConnectWithServer(conn)
 			if err != nil {
 				log.Printf("NewDeviceConnect error: %s", err)
 				return
