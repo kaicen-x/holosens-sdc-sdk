@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"mime"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 )
@@ -170,7 +172,7 @@ func (r *HttpClientRequest) Send() (*http.Response, error) {
 	return res, nil
 }
 
-// DecodeJSON 执行请求并解析响应为JSON
+// DecodeJSON 执行请求并解析响应为JSON（请不要重复关闭Response.Body）
 func (r *HttpClientRequest) DecodeJSON(obj any) (*http.Response, error) {
 	// 执行请求
 	res, err := r.Send()
@@ -192,4 +194,36 @@ func (r *HttpClientRequest) DecodeJSON(obj any) (*http.Response, error) {
 	}
 	// 解析响应体
 	return res, json.Unmarshal(body, obj)
+}
+
+// DecodeFormData 执行请求并解析响应为FormData（请不要重复关闭Response.Body）
+//
+//	@param maxMemorySize: 最大内存大小，单位为字节（建议不要超过20MB，超出为文件内容将会自动落盘到临时文件，不用担心文件接收不到）
+func (r *HttpClientRequest) DecodeFormData(maxMemorySize int64) (*multipart.Form, *http.Response, error) {
+	// 执行请求
+	res, err := r.Send()
+	if err != nil {
+		return nil, nil, err
+	}
+	defer res.Body.Close()
+	// 解析boundary
+	mediatype, params, err := mime.ParseMediaType(res.Header.Get("Content-Type"))
+	if err != nil {
+		return nil, nil, err
+	}
+	if mediatype != "multipart/form-data" {
+		return nil, nil, errors.New("invalid Content-Type")
+	}
+	boundary, ok := params["boundary"]
+	if !ok {
+		return nil, nil, errors.New("invalid boundary") // 无法解析boundary
+	}
+	// 创建表单读取器
+	reader := multipart.NewReader(res.Body, boundary)
+	form, err := reader.ReadForm(maxMemorySize)
+	if err != nil {
+		return nil, nil, err
+	}
+	// OK
+	return form, res, nil
 }

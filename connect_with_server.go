@@ -12,6 +12,7 @@ import (
 
 	devicemanage "github.com/bearki/holosens-sdc-sdk/api/device-manage"
 	intelligentmetadata "github.com/bearki/holosens-sdc-sdk/api/intelligent-metadata"
+	snappicture "github.com/bearki/holosens-sdc-sdk/api/snap-picture"
 	"github.com/bearki/holosens-sdc-sdk/pkg/httpconn"
 )
 
@@ -55,6 +56,8 @@ func NewDeviceConnectWithServer(conn net.Conn) (*DeviceConnectWithServer, error)
 	deviceManager := devicemanage.NewManager(connInstance)
 	// 创建智能元数据对接管理器
 	metadataManager := intelligentmetadata.NewManager(connInstance)
+	// 创建抓拍与图片下载管理器
+	snapPictureManager := snappicture.NewManager(connInstance)
 
 	// 接收设备主动注册信息
 	params, err := deviceManager.InitiativeRegister()
@@ -65,9 +68,10 @@ func NewDeviceConnectWithServer(conn net.Conn) (*DeviceConnectWithServer, error)
 	// 返回设备实例
 	return &DeviceConnectWithServer{
 		DeviceConnect: &DeviceConnect{
-			connInstance:    connInstance,
-			deviceManager:   deviceManager,
-			metadataManager: metadataManager,
+			connInstance:       connInstance,
+			deviceManager:      deviceManager,
+			metadataManager:    metadataManager,
+			snapPictureManager: snapPictureManager,
 		},
 		InitiativeRegisterParams: *params,
 	}, nil

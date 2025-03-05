@@ -4,9 +4,11 @@ import (
 	"crypto/tls"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	holosenssdcsdk "github.com/bearki/holosens-sdc-sdk"
+	snappicture "github.com/bearki/holosens-sdc-sdk/api/snap-picture"
 )
 
 // 主动注册服务端
@@ -56,27 +58,40 @@ func main() {
 			// 设置认证信息
 			instance.SetAuthorization("ApiAdmin", "a1234567")
 
+			// 获取设备基础信息
+			baseInfo, err := instance.DeviceManager().BaseInfoQuery(101)
+			if err != nil {
+				log.Printf("BaseInfoQuery error: %s", err)
+				return
+			}
+			fmt.Printf("Keep Live BaseInfo: %+v\n", baseInfo)
+
+			// 获取设备通道信息
+			fmt.Println("获取设备通道信息")
+			channelInfo, err := instance.DeviceManager().ChannelInfoQuery()
+			if err != nil {
+				log.Printf("ChannelInfoQuery error: %s", err)
+				return
+			}
+			fmt.Printf("Keep Live ChannelInfo: %+v\n", channelInfo)
+
 			// 保持连接
 			for {
-				// 获取设备基础信息
-				baseInfo, err := instance.DeviceManager().BaseInfoQuery(101)
+				// 抓拍图片
+				fmt.Println("抓拍图片")
+				snapInfo, err := instance.SnapPictureManager().ManualCapture(snappicture.ManualCaptureParams{
+					UUID: channelInfo.CnsChnParam[0].Uuid,
+				})
 				if err != nil {
-					log.Printf("BaseInfoQuery error: %s", err)
+					log.Printf("ManualCapture error: %s", err)
 					return
 				}
-				fmt.Printf("Keep Live BaseInfo: %+v\n", baseInfo)
+				fmt.Printf("Keep Live ManualCapture: %s %s\n", snapInfo.ContentType, snapInfo.FileName)
 
-				time.Sleep(5 * time.Second)
+				// 保存图片
+				os.WriteFile("test.jpg", snapInfo.Data, 0666)
 
-				// 获取设备激活状态
-				activateStatusInfo, err := instance.DeviceManager().ActivateStatusQuery()
-				if err != nil {
-					log.Printf("ActivateStatus error: %s", err)
-					return
-				}
-				fmt.Printf("Keep Live ActivateStatus: %+v\n", activateStatusInfo)
-
-				time.Sleep(5 * time.Second)
+				time.Sleep(time.Millisecond * 30)
 			}
 		}()
 	}
