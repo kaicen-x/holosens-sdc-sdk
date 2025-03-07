@@ -3,7 +3,7 @@
  * @Date: 2025/03/02 00:17
  * @Description: 华为HoloSens SDC API北向接口设备通道信息查询
  */
-package devicemanage
+package device
 
 // ChannelAttr 设备通道属性
 type ChannelAttr struct {

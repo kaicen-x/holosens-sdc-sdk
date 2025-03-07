@@ -3,7 +3,7 @@
  * @Date: 2025/03/02 00:17
  * @Description: 华为HoloSens SDC API北向接口设备注册管理
  */
-package devicemanage
+package device
 
 import (
 	"net/http"

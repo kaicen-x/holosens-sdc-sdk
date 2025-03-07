@@ -3,7 +3,7 @@
  * @Date: 2025/03/02 00:17
  * @Description: 华为HoloSens SDC API北向接口智能元数据添加订阅
  */
-package intelligentmetadata
+package metadata
 
 import (
 	"errors"
@@ -53,7 +53,7 @@ type AddSubscribeParams struct {
 	// 不携带此字段或此字段设置为1时上报图片
 	//
 	// 取值范围：0-不上报图片，1-上报图片
-	NeedUploadPic int `json:"needUploadPic,omitempty"`
+	NeedUploadPic *int `json:"needUploadPic,omitempty"`
 }
 
 // AddSubscribeReplyData 智能元数据添加订阅响应数据

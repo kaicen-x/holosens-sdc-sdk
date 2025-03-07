@@ -1,3 +1,8 @@
+/**
+ * @Author: Bearki
+ * @Date: 2025/03/02 00:17
+ * @Description: 华为HoloSens SDC API北向接口抓拍图片查询
+ */
 package snapshot
 
 import (

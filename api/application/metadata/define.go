@@ -3,7 +3,7 @@
  * @Date: 2025/03/02 00:17
  * @Description: 华为HoloSens SDC API北向接口智能元数据对接模块
  */
-package intelligentmetadata
+package metadata
 
 import (
 	"github.com/bearki/holosens-sdc-sdk/pkg/httpconn"

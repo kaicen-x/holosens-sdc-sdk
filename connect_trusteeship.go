@@ -6,38 +6,80 @@
 package holosenssdcsdk
 
 import (
-	devicemanage "github.com/bearki/holosens-sdc-sdk/api/device-manage"
-	intelligentmetadata "github.com/bearki/holosens-sdc-sdk/api/intelligent-metadata"
-	snappicture "github.com/bearki/holosens-sdc-sdk/api/snapshot"
+	"crypto/tls"
+	"net"
+	"time"
+
+	"github.com/bearki/holosens-sdc-sdk/api/application/device"
+	"github.com/bearki/holosens-sdc-sdk/api/application/metadata"
+	"github.com/bearki/holosens-sdc-sdk/api/application/snapshot"
 	"github.com/bearki/holosens-sdc-sdk/pkg/httpconn"
 )
 
-// DeviceConnect 设备Socket连接托管基础
-type DeviceConnect struct {
-	connInstance       *httpconn.Connect            // Socket连接实例
-	deviceManager      *devicemanage.Manager        // 设备管理与维护管理器
-	metadataManager    *intelligentmetadata.Manager // 智能元数据对接管理器
-	snapPictureManager *snappicture.Manager         // 抓拍与图片下载管理器
+// ConnectTrusteeship Socket连接托管器
+type ConnectTrusteeship struct {
+	connInstance    *httpconn.Connect // Socket连接实例
+	deviceManager   *device.Manager   // 设备管理与维护管理器
+	metadataManager *metadata.Manager // 智能元数据对接管理器
+	snapshotManager *snapshot.Manager // 抓拍与图片下载管理器
+}
+
+// NewWithClient 新建客户端Socket连接托管器
+//
+//	@param conn: 设备Socket连接通道
+//	@return 设备实例
+//	@return 错误信息
+func newConnectTrusteeship(conn net.Conn) *ConnectTrusteeship {
+	// 处理连接保活
+	switch tmpConn := conn.(type) {
+	// 普通TCP连接
+	case *net.TCPConn:
+		tmpConn.SetKeepAlive(true)
+		tmpConn.SetKeepAlivePeriod(time.Minute)
+	// TLS连接
+	case *tls.Conn:
+		tmpConn.NetConn().(*net.TCPConn).SetKeepAlive(true)
+		tmpConn.NetConn().(*net.TCPConn).SetKeepAlivePeriod(time.Minute)
+	}
+
+	// 构建连接实例
+	connInstance := httpconn.NewConnect(conn)
+	// 创建设备管理与维护管理器
+	deviceManager := device.NewManager(connInstance)
+	// 创建智能元数据对接管理器
+	metadataManager := metadata.NewManager(connInstance)
+
+	// OK
+	return &ConnectTrusteeship{
+		connInstance:    connInstance,
+		deviceManager:   deviceManager,
+		metadataManager: metadataManager,
+	}
+}
+
+// GetHttp 获取基于Socket连接的HTTP托管器
+func (p *ConnectTrusteeship) GetHttp() *httpconn.Connect {
+	return p.connInstance
 }
 
 // SetAuthorization 设置连接认证信息
-func (p *DeviceConnect) SetAuthorization(username, password string) {
-	client := p.connInstance.LockHttpClient()
-	defer p.connInstance.Unlock()
+func (p *ConnectTrusteeship) SetAuthorization(username, password string) {
+	client := p.GetHttp().LockHttpClient()
+	defer p.GetHttp().Unlock()
 	client.SetDigestAuth(username, password)
 }
 
 // DeviceManager 获取设备管理与维护管理器
-func (p *DeviceConnect) DeviceManager() *devicemanage.Manager {
+func (p *ConnectTrusteeship) DeviceManager() *device.Manager {
 	return p.deviceManager
 }
 
-// IntelligentMetadataManager 获取智能元数据对接管理器
-func (p *DeviceConnect) IntelligentMetadataManager() *intelligentmetadata.Manager {
+// MetadataManager 获取智能元数据对接管理器
+func (p *ConnectTrusteeship) MetadataManager() *metadata.Manager {
 	return p.metadataManager
 }
 
-// SnapPictureManager 获取抓拍与图片下载管理器
-func (p *DeviceConnect) SnapPictureManager() *snappicture.Manager {
-	return p.snapPictureManager
+// SnapshotManager 获取抓拍与图片下载管理器
+func (p *ConnectTrusteeship) SnapshotManager() *snapshot.Manager {
+	return p.snapshotManager
 }

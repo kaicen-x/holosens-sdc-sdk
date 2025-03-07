@@ -6,7 +6,7 @@ import (
 	"log"
 
 	holosenssdcsdk "github.com/bearki/holosens-sdc-sdk"
-	"github.com/bearki/holosens-sdc-sdk/api/snapshot"
+	"github.com/bearki/holosens-sdc-sdk/api/application/snapshot"
 )
 
 // 主动注册服务端
@@ -42,7 +42,7 @@ func main() {
 		// 处理每个连接
 		go func() {
 			// 构建设备连接实例
-			instance, err := holosenssdcsdk.NewDeviceConnectWithServer(conn)
+			instance, err := holosenssdcsdk.NewWithServer(conn)
 			if err != nil {
 				log.Printf("NewDeviceConnect error: %s", err)
 				return
@@ -74,7 +74,7 @@ func main() {
 			fmt.Printf("Keep Live ChannelInfo: %+v\n", channelInfo)
 
 			// 查询抓拍图片
-			snapshotInfo, err := instance.SnapPictureManager().SnapshotQuery(
+			snapshotInfo, err := instance.SnapshotManager().SnapshotQuery(
 				channelInfo.CnsChnParam[0].Uuid,
 				snapshot.SnapshotQueryWithBeginIndex(1),
 			)

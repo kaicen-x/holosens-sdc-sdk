@@ -3,7 +3,7 @@
  * @Date: 2025/03/02 00:17
  * @Description: 华为HoloSens SDC API北向接口设备激活状态查询
  */
-package devicemanage
+package device
 
 // IdQueryReply 设备激活状态查询响应
 type ActivateStatusQueryReply struct {
