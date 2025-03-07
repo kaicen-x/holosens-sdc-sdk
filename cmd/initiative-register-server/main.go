@@ -4,11 +4,9 @@ import (
 	"crypto/tls"
 	"fmt"
 	"log"
-	"os"
-	"time"
 
 	holosenssdcsdk "github.com/bearki/holosens-sdc-sdk"
-	snappicture "github.com/bearki/holosens-sdc-sdk/api/snap-picture"
+	"github.com/bearki/holosens-sdc-sdk/api/snapshot"
 )
 
 // 主动注册服务端
@@ -75,24 +73,16 @@ func main() {
 			}
 			fmt.Printf("Keep Live ChannelInfo: %+v\n", channelInfo)
 
-			// 保持连接
-			for {
-				// 抓拍图片
-				fmt.Println("抓拍图片")
-				snapInfo, err := instance.SnapPictureManager().ManualCapture(snappicture.ManualCaptureParams{
-					UUID: channelInfo.CnsChnParam[0].Uuid,
-				})
-				if err != nil {
-					log.Printf("ManualCapture error: %s", err)
-					return
-				}
-				fmt.Printf("Keep Live ManualCapture: %s %s\n", snapInfo.ContentType, snapInfo.FileName)
-
-				// 保存图片
-				os.WriteFile("test.jpg", snapInfo.Data, 0666)
-
-				time.Sleep(time.Millisecond * 30)
+			// 查询抓拍图片
+			snapshotInfo, err := instance.SnapPictureManager().SnapshotQuery(
+				channelInfo.CnsChnParam[0].Uuid,
+				snapshot.SnapshotQueryWithBeginIndex(1),
+			)
+			if err != nil {
+				log.Printf("SnapshotQuery error: %s", err)
+				return
 			}
+			fmt.Printf("Keep Live SnapshotInfo: %+v\n", snapshotInfo)
 		}()
 	}
 }

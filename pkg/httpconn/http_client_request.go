@@ -73,6 +73,14 @@ func (r *HttpClientRequest) SetQuery(key, val string) *HttpClientRequest {
 	return r
 }
 
+// GetQuery 获取Query请求参数
+func (r *HttpClientRequest) GetQuery() url.Values {
+	if r.query == nil {
+		r.query = make(url.Values)
+	}
+	return r.query
+}
+
 // AddQuery 添加Query请求参数
 func (r *HttpClientRequest) AddQuery(key, val string) *HttpClientRequest {
 	// 添加参数

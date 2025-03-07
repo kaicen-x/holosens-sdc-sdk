@@ -12,7 +12,7 @@ import (
 
 	devicemanage "github.com/bearki/holosens-sdc-sdk/api/device-manage"
 	intelligentmetadata "github.com/bearki/holosens-sdc-sdk/api/intelligent-metadata"
-	snappicture "github.com/bearki/holosens-sdc-sdk/api/snap-picture"
+	snappicture "github.com/bearki/holosens-sdc-sdk/api/snapshot"
 	"github.com/bearki/holosens-sdc-sdk/pkg/httpconn"
 )
 

@@ -3,7 +3,7 @@
  * @Date: 2025/03/02 00:17
  * @Description: 华为HoloSens SDC API北向接口手动抓拍
  */
-package snappicture
+package snapshot
 
 import (
 	"errors"
@@ -11,28 +11,28 @@ import (
 	"strings"
 )
 
-// ManualCaptureParams 手动抓拍请求参数
-type ManualCaptureParams struct {
+// ManualSnapshotParams 手动抓拍请求参数
+type ManualSnapshotParams struct {
 	UUID      string `json:"UUID"`      // 通道UUID
 	ChannelID int    `json:"channelID"` // 通道ID（选填）
 }
 
-// ManualCaptureReply 手动抓拍返回数据
-type ManualCaptureReply struct {
+// ManualSnapshotReply 手动抓拍返回数据
+type ManualSnapshotReply struct {
 	Data        []byte // 抓拍图片数据
 	ContentType string // 抓拍图片格式
 	FileName    string // 抓拍图片文件名
 }
 
-// ManualCapture 手动抓拍
+// ManualSnapshot 手动抓拍
 //
 //	@param params: 抓拍参数
 //	@return: 抓拍图片数据
 //	@return: 抓拍图片格式
 //	@return: 抓拍图片文件名
 //	@return: 错误信息
-func (p *Manager) ManualCapture(params ManualCaptureParams) (*ManualCaptureReply, error) {
-	// 获取Socket连接
+func (p *Manager) ManualSnapshot(params ManualSnapshotParams) (*ManualSnapshotReply, error) {
+	// 获取Socket连接的HTTP客户端
 	client := p.connInstance.LockHttpClient()
 	defer p.connInstance.Unlock()
 
@@ -69,7 +69,7 @@ func (p *Manager) ManualCapture(params ManualCaptureParams) (*ManualCaptureReply
 			}
 
 			// OK
-			return &ManualCaptureReply{
+			return &ManualSnapshotReply{
 				Data:        data,
 				ContentType: fh.Header.Get("Content-Type"),
 				FileName:    fh.Filename,
