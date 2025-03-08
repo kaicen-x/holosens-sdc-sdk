@@ -50,8 +50,8 @@ type ChannelAttr struct {
 	ForwardNeed string `json:"forward_need"`
 }
 
-// ChannelParam 设备通道参数
-type ChannelParam struct {
+// ChannelInfo 设备通道参数
+type ChannelInfo struct {
 	Uuid     string            `json:"uuid"`     // 设备通道UUID
 	AttrList ChannelAttr       `json:"attrList"` // 设备通道属性（详情请查阅文档）
 	FuncList map[string]string `json:"funcList"` // 设备通道功能（详情请查阅文档）
@@ -59,7 +59,7 @@ type ChannelParam struct {
 
 // ChannelInfoQueryReply 设备通道信息查询响应
 type ChannelInfoQueryReply struct {
-	CnsChnParam []ChannelParam `json:"CnsChnParam"` // 设备通道参数列表
+	CnsChnParam []ChannelInfo `json:"CnsChnParam"` // 设备通道参数列表
 }
 
 // ChannelInfoQuery 设备通道信息查询

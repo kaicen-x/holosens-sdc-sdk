@@ -7,7 +7,8 @@ package device
 
 // IdQueryReply 设备激活状态查询响应
 type ActivateStatusQueryReply struct {
-	Status int `json:"status"` // 是否已激活（0-未激活，1-已激活）
+	// 是否已激活（0-未激活，1-已激活）
+	Status int `json:"status"`
 }
 
 // ActivateStatusQuery 设备激活状态查询

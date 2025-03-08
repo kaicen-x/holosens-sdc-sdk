@@ -13,6 +13,7 @@ import (
 	"github.com/bearki/holosens-sdc-sdk/api/application/device"
 	"github.com/bearki/holosens-sdc-sdk/api/application/metadata"
 	"github.com/bearki/holosens-sdc-sdk/api/application/snapshot"
+	"github.com/bearki/holosens-sdc-sdk/api/details/itgt"
 	"github.com/bearki/holosens-sdc-sdk/pkg/httpconn"
 )
 
@@ -22,6 +23,7 @@ type ConnectTrusteeship struct {
 	deviceManager   *device.Manager   // 设备管理与维护管理器
 	metadataManager *metadata.Manager // 智能元数据对接管理器
 	snapshotManager *snapshot.Manager // 抓拍与图片下载管理器
+	itgtManager     *itgt.Manager     // 智能分析管理器
 }
 
 // NewWithClient 新建客户端Socket连接托管器
@@ -44,16 +46,13 @@ func newConnectTrusteeship(conn net.Conn) *ConnectTrusteeship {
 
 	// 构建连接实例
 	connInstance := httpconn.NewConnect(conn)
-	// 创建设备管理与维护管理器
-	deviceManager := device.NewManager(connInstance)
-	// 创建智能元数据对接管理器
-	metadataManager := metadata.NewManager(connInstance)
-
 	// OK
 	return &ConnectTrusteeship{
 		connInstance:    connInstance,
-		deviceManager:   deviceManager,
-		metadataManager: metadataManager,
+		deviceManager:   device.NewManager(connInstance),
+		metadataManager: metadata.NewManager(connInstance),
+		snapshotManager: snapshot.NewManager(connInstance),
+		itgtManager:     itgt.NewManager(connInstance),
 	}
 }
 
@@ -82,4 +81,9 @@ func (p *ConnectTrusteeship) MetadataManager() *metadata.Manager {
 // SnapshotManager 获取抓拍与图片下载管理器
 func (p *ConnectTrusteeship) SnapshotManager() *snapshot.Manager {
 	return p.snapshotManager
+}
+
+// ItgtManager 获取智能分析管理器
+func (p *ConnectTrusteeship) ItgtManager() *itgt.Manager {
+	return p.itgtManager
 }

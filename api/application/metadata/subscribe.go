@@ -7,12 +7,12 @@ package metadata
 
 // SubscribeBaseInfo 订阅基础信息
 type SubscribeBaseInfo struct {
-	// 通知接收地址
+	// 通知接收地址（必填）
 	//
 	//	订阅成功后，SDC将向此地址推送订阅消息
 	//	12.0.0版本起支持域名，域名长度最大48个字节，即IP地址或域名入参二选一
 	Address string `json:"address"`
-	// 通知接收端口
+	// 通知接收端口（必填）
 	//
 	//	订阅成功后，SDC将向此端口推送订阅消息
 	Port uint16 `json:"port"`

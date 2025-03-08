@@ -19,8 +19,8 @@ type DeviceVersion struct {
 	Hardware string `json:"Hardware"` // 硬件版本。
 }
 
-// ChannelInfo 视频通道信息。
-type ChannelInfo struct {
+// ChannelBaseInfo 视频通道基础信息。
+type ChannelBaseInfo struct {
 	ChannelId int    `json:"ChannelId"` // 视频通道ID。
 	UUID      string `json:"UUID"`      // 视频通道UUID。
 	DeviceId  string `json:"DeviceId"`  // 设备ID。
@@ -28,13 +28,13 @@ type ChannelInfo struct {
 
 // InitiativeRegisterParams 主动注册请求参数。
 type InitiativeRegisterParams struct {
-	DeviceName     string        `json:"DeviceName"`     // 设备名称。
-	Manufacturer   string        `json:"Manufacturer"`   // 厂商。
-	DeviceType     string        `json:"DeviceType"`     // 款型名称。
-	SerialNumber   string        `json:"SerialNumber"`   // 设备序列号。
-	DeviceVersion  DeviceVersion `json:"DeviceVersion"`  // 设备版本信息对象。
-	IpAddr         string        `json:"IpAddr"`         // 设备IP。
-	ChannelInfoArr []ChannelInfo `json:"ChannelInfoArr"` // 视频通道信息数组。
+	DeviceName     string            `json:"DeviceName"`     // 设备名称。
+	Manufacturer   string            `json:"Manufacturer"`   // 厂商。
+	DeviceType     string            `json:"DeviceType"`     // 款型名称。
+	SerialNumber   string            `json:"SerialNumber"`   // 设备序列号。
+	DeviceVersion  DeviceVersion     `json:"DeviceVersion"`  // 设备版本信息对象。
+	IpAddr         string            `json:"IpAddr"`         // 设备IP。
+	ChannelInfoArr []ChannelBaseInfo `json:"ChannelInfoArr"` // 视频通道信息数组。
 }
 
 // InitiativeRegisterReply 设备主动注册响应参数
