@@ -1,7 +1,7 @@
 /**
  * @Author: Bearki
  * @Date: 2025/03/02 00:17
- * @Description: 华为HoloSens SDC API北向接口智能元数据添加订阅
+ * @Description: 华为HoloSens SDC API北向接口智能元数据订阅添加
  */
 package metadata
 
@@ -11,10 +11,10 @@ import (
 	"github.com/bearki/holosens-sdc-sdk/api/common"
 )
 
-// AddSubscribeParams 智能元数据添加订阅参数
-type AddSubscribeParams struct {
-	// 订阅信息
-	SubscribeInfo
+// SubscribeAddParams 智能元数据订阅添加参数
+type SubscribeAddParams struct {
+	// 订阅基础信息
+	SubscribeBaseInfo
 	// 元数据上报时的认证用户名（选填）
 	//
 	// 用户名和密码只支持通过HTTPS加密传输，
@@ -27,8 +27,8 @@ type AddSubscribeParams struct {
 	DigUserPwd *string `json:"digUserPwd,omitempty"`
 }
 
-// AddSubscribeReplyData 智能元数据添加订阅响应数据
-type AddSubscribeReplyData struct {
+// SubscribeAddReplyData 智能元数据订阅添加响应数据
+type SubscribeAddReplyData struct {
 	// 通用响应状态
 	common.ResponseStatus
 	// 订阅ID。
@@ -37,20 +37,20 @@ type AddSubscribeReplyData struct {
 	ID int `json:"ID"`
 }
 
-// AddSubscribeReply 智能元数据添加订阅响应
-type AddSubscribeReply = common.Response[AddSubscribeReplyData]
+// SubscribeAddReply 智能元数据添加订阅响应
+type SubscribeAddReply = common.Response[SubscribeAddReplyData]
 
 // SubscribeAdd 智能元数据订阅添加
 //
-//	@param params: 订阅参数
+//	@param params: 订阅添加参数
 //	@return 订阅ID
-func (p *Manager) SubscribeAdd(params AddSubscribeParams) (int, error) {
+func (p *Manager) SubscribeAdd(params SubscribeAddParams) (int, error) {
 	// 获取Socket连接
 	client := p.connInstance.LockHttpClient()
 	defer p.connInstance.Unlock()
 
 	// 发送请求
-	var reply AddSubscribeReply
+	var reply SubscribeAddReply
 	_, err := client.Post("/SDCAPI/V2.0/Metadata/Subscription").
 		SetJSON(&params).
 		DecodeJSON(&reply)
@@ -58,7 +58,7 @@ func (p *Manager) SubscribeAdd(params AddSubscribeParams) (int, error) {
 		return 0, err
 	}
 
-	// 检查是否订阅成功
+	// 检查是否添加成功
 	if reply.ResponseStatus.StatusCode != 0 {
 		return 0, errors.New(reply.ResponseStatus.StatusString)
 	}

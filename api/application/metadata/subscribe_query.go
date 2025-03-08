@@ -1,7 +1,7 @@
 /**
  * @Author: Bearki
  * @Date: 2025/03/02 00:17
- * @Description: 华为HoloSens SDC API北向接口智能元数据查询订阅
+ * @Description: 华为HoloSens SDC API北向接口智能元数据订阅查询
  */
 package metadata
 
@@ -13,9 +13,9 @@ import (
 // SubscribeQueryParam 订阅查询参数构建器
 type SubscribeQueryParam func(url.Values)
 
-// SubscribeQueryWithID 订阅ID
+// SubscribeQueryWithID 订阅查询参数：订阅ID
 //
-//	选填，不填则返回全部订阅参数
+//	选填，不填则返回全部订阅
 func SubscribeQueryWithID(val int) SubscribeQueryParam {
 	return func(values url.Values) {
 		values.Add("ID", strconv.Itoa(val))

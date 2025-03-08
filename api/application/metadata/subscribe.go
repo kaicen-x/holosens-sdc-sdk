@@ -5,10 +5,8 @@
  */
 package metadata
 
-// Subscription 订阅信息
-type SubscribeInfo struct {
-	// 订阅ID
-	ID int `json:"id"`
+// SubscribeBaseInfo 订阅基础信息
+type SubscribeBaseInfo struct {
 	// 通知接收地址
 	//
 	//	订阅成功后，SDC将向此地址推送订阅消息
@@ -36,4 +34,12 @@ type SubscribeInfo struct {
 	// 不携带此字段或此字段设置为1时上报图片
 	// 取值范围：0-不上报图片，1-上报图片
 	NeedUploadPic *int `json:"needUploadPic,omitempty"`
+}
+
+// Subscription 订阅信息
+type SubscribeInfo struct {
+	// 订阅ID
+	ID int `json:"id"`
+	// 订阅基础信息
+	SubscribeBaseInfo
 }
