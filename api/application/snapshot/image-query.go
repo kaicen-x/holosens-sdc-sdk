@@ -125,114 +125,114 @@ const (
 	SnapshotVehicleRegulationType_MOTORCYCLE_FORBIDDEN         SnapshotVehicleRegulationType = 34
 )
 
-// SnapshotQueryParam 抓拍图查询参数构建器
-type SnapshotQueryParam func(url.Values)
+// QueryParam 抓拍图查询参数构建器
+type QueryParam func(url.Values)
 
-// SnapshotQueryWithTotalNum 总记录数
+// QueryWithTotalNum 抓拍图查询参数：总记录数
 //
 //	通常首次不填写，第二次查询时使用第一次查询时返回的结果
-func SnapshotQueryWithTotalNum(val int) SnapshotQueryParam {
+func QueryWithTotalNum(val int) QueryParam {
 	return func(values url.Values) {
 		values.Set("TotalNum", strconv.Itoa(val))
 	}
 }
 
-// SnapshotQueryWithBeginIndex 当前开始记录数
+// QueryWithBeginIndex 抓拍图查询参数：当前开始记录数
 //
 //	取值范围：[1,4096]
-func SnapshotQueryWithBeginIndex(val int) SnapshotQueryParam {
+func QueryWithBeginIndex(val int) QueryParam {
 	return func(values url.Values) {
 		values.Set("BeginIndex", strconv.Itoa(val))
 	}
 }
 
-// SnapshotQueryWithEndIndex 当前结束记录数
+// QueryWithEndIndex 抓拍图查询参数：当前结束记录数
 //
 //	取值范围：[1,4096]
-func SnapshotQueryWithEndIndex(val int) SnapshotQueryParam {
+func QueryWithEndIndex(val int) QueryParam {
 	return func(values url.Values) {
 		values.Set("EndIndex", strconv.Itoa(val))
 	}
 }
 
-// SnapshotQueryWithBeginTime 开始时间
+// QueryWithBeginTime 抓拍图查询参数：开始时间
 //
 //	UTC时间戳，单位秒
-func SnapshotQueryWithBeginTime(val int64) SnapshotQueryParam {
+func QueryWithBeginTime(val int64) QueryParam {
 	return func(values url.Values) {
 		values.Set("BeginTime", strconv.FormatInt(val, 10))
 	}
 }
 
-// SnapshotQueryWithEndTime 结束时间
+// QueryWithEndTime 抓拍图查询参数：结束时间
 //
 //	UTC时间戳，单位秒
-func SnapshotQueryWithEndTime(val int64) SnapshotQueryParam {
+func QueryWithEndTime(val int64) QueryParam {
 	return func(values url.Values) {
 		values.Set("EndTime", strconv.FormatInt(val, 10))
 	}
 }
 
-// SnapshotQueryWithTimeType 查询时间类型
+// QueryWithTimeType 抓拍图查询参数：查询时间类型
 //
 //	不带此字段时，默认按照UTC时间查询
 //	取值范围：（0-摄像机本地时间，1-UTC时间）
-func SnapshotQueryWithTimeType(val int) SnapshotQueryParam {
+func QueryWithTimeType(val int) QueryParam {
 	return func(values url.Values) {
 		values.Set("TimeType", strconv.Itoa(val))
 	}
 }
 
-// SnapshotQueryWithSnapshotType 抓拍图类型
-func SnapshotQueryWithSnapshotType(val SnapshotType) SnapshotQueryParam {
+// QueryWithSnapshotType 抓拍图查询参数：抓拍图类型
+func QueryWithSnapshotType(val SnapshotType) QueryParam {
 	return func(values url.Values) {
 		values.Set("SnapshotType", strconv.Itoa(int(val)))
 	}
 }
 
-// SnapshotQueryWithLaneId 车道号
+// QueryWithLaneId 抓拍图查询参数：车道号
 //
 //	取值范围：[0,3]
-func SnapshotQueryWithLaneId(val int) SnapshotQueryParam {
+func QueryWithLaneId(val int) QueryParam {
 	return func(values url.Values) {
 		values.Set("LaneId", strconv.Itoa(val))
 	}
 }
 
-// SnapshotQueryWithVehicleType 车辆类型
-func SnapshotQueryWithVehicleType(val SnapshotVehicleType) SnapshotQueryParam {
+// QueryWithVehicleType 抓拍图查询参数：车辆类型
+func QueryWithVehicleType(val SnapshotVehicleType) QueryParam {
 	return func(values url.Values) {
 		values.Set("VehicleType", strconv.Itoa(int(val)))
 	}
 }
 
-// SnapshotQueryWithSnapshotDevType 抓拍机类型
-func SnapshotQueryWithSnapshotDevType(val SnapshotDeviceType) SnapshotQueryParam {
+// QueryWithSnapshotDevType 抓拍图查询参数：抓拍机类型
+func QueryWithSnapshotDevType(val SnapshotDeviceType) QueryParam {
 	return func(values url.Values) {
 		values.Set("SnapshotDevType", strconv.Itoa(int(val)))
 	}
 }
 
-// SnapshotQueryWithVehicleRegulationType 违章类型
-func SnapshotQueryWithVehicleRegulationType(val SnapshotVehicleRegulationType) SnapshotQueryParam {
+// QueryWithVehicleRegulationType 抓拍图查询参数：违章类型
+func QueryWithVehicleRegulationType(val SnapshotVehicleRegulationType) QueryParam {
 	return func(values url.Values) {
 		values.Set("VehicleRegulationType", strconv.Itoa(int(val)))
 	}
 }
 
-// SnapshotQueryWithRegulationRecordTime 违章录像时间长度
+// QueryWithRegulationRecordTime 抓拍图查询参数：违章录像时间长度
 //
 //	取值范围：[10,20]
-func SnapshotQueryWithRegulationRecordTime(val int) SnapshotQueryParam {
+func QueryWithRegulationRecordTime(val int) QueryParam {
 	return func(values url.Values) {
 		values.Set("RegulationRecordTime", strconv.Itoa(val))
 	}
 }
 
-// SnapshotQueryWithOnceInquireFlag 单页查询标记
+// QueryWithOnceInquireFlag 抓拍图查询参数：单页查询标记
 //
 //	取值范围：（1-单页查询使能，0-单页查询关闭）
-func SnapshotQueryWithOnceInquireFlag(val int) SnapshotQueryParam {
+func QueryWithOnceInquireFlag(val int) QueryParam {
 	return func(values url.Values) {
 		values.Set("OnceInquireFlag", strconv.Itoa(val))
 	}
@@ -256,8 +256,8 @@ type SnapshotRecordInfo struct {
 	EndTime int64 `json:"endTime"`
 }
 
-// SnapshotQueryReply 抓拍图查询响应
-type SnapshotQueryReply struct {
+// QueryReply 抓拍图查询响应
+type QueryReply struct {
 	// 总记录数
 	TotalNum int `json:"totalNum"`
 	// 当前开始记录数
@@ -282,13 +282,13 @@ type SnapshotQueryReply struct {
 	VehicleRegulationType SnapshotVehicleRegulationType `json:"vehicleRegulationType"`
 }
 
-// SnapshotQuery 抓拍图查询
+// ImageQuery 抓拍图查询
 //
 //	@param uuid: 设备通道UUID
 //	@param params: 查询参数
 //	@return 查询结果
 //	@return 异常信息
-func (p *Manager) SnapshotQuery(uuid string, params ...SnapshotQueryParam) (*SnapshotQueryReply, error) {
+func (p *Manager) ImageQuery(uuid string, params ...QueryParam) (*QueryReply, error) {
 	// 获取Socket连接的HTTP客户端
 	client := p.connInstance.LockHttpClient()
 	defer p.connInstance.Unlock()
@@ -302,7 +302,7 @@ func (p *Manager) SnapshotQuery(uuid string, params ...SnapshotQueryParam) (*Sna
 		param(req.GetQuery())
 	}
 	// 发送请求
-	var reply SnapshotQueryReply
+	var reply QueryReply
 	_, err := req.DecodeJSON(&reply)
 	if err != nil {
 		return nil, err

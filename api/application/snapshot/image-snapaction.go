@@ -11,27 +11,25 @@ import (
 	"strings"
 )
 
-// ManualSnapshotParams 手动抓拍请求参数
-type ManualSnapshotParams struct {
+// SnapActionParams 手动抓拍参数
+type SnapActionParams struct {
 	UUID      string `json:"UUID"`      // 通道UUID
 	ChannelID int    `json:"channelID"` // 通道ID（选填）
 }
 
-// ManualSnapshotReply 手动抓拍返回数据
-type ManualSnapshotReply struct {
+// SnapActionReply 手动抓拍响应
+type SnapActionReply struct {
 	Data        []byte // 抓拍图片数据
 	ContentType string // 抓拍图片格式
 	FileName    string // 抓拍图片文件名
 }
 
-// ManualSnapshot 手动抓拍
+// SnapAction 手动抓拍
 //
-//	@param params: 抓拍参数
-//	@return: 抓拍图片数据
-//	@return: 抓拍图片格式
-//	@return: 抓拍图片文件名
+//	@param params: 手动抓拍参数
+//	@return: 手动抓拍响应
 //	@return: 错误信息
-func (p *Manager) ManualSnapshot(params ManualSnapshotParams) (*ManualSnapshotReply, error) {
+func (p *Manager) SnapAction(params SnapActionParams) (*SnapActionReply, error) {
 	// 获取Socket连接的HTTP客户端
 	client := p.connInstance.LockHttpClient()
 	defer p.connInstance.Unlock()
@@ -69,7 +67,7 @@ func (p *Manager) ManualSnapshot(params ManualSnapshotParams) (*ManualSnapshotRe
 			}
 
 			// OK
-			return &ManualSnapshotReply{
+			return &SnapActionReply{
 				Data:        data,
 				ContentType: fh.Header.Get("Content-Type"),
 				FileName:    fh.Filename,

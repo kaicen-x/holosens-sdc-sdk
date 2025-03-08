@@ -74,9 +74,9 @@ func main() {
 			fmt.Printf("Keep Live ChannelInfo: %+v\n", channelInfo)
 
 			// 查询抓拍图片
-			snapshotInfo, err := instance.SnapshotManager().SnapshotQuery(
+			snapshotInfo, err := instance.SnapshotManager().ImageQuery(
 				channelInfo.CnsChnParam[0].Uuid,
-				snapshot.SnapshotQueryWithBeginIndex(1),
+				snapshot.QueryWithBeginIndex(1),
 			)
 			if err != nil {
 				log.Printf("SnapshotQuery error: %s", err)
