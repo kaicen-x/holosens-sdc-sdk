@@ -47,6 +47,8 @@ func runSdcServer(socketCache *holosenssdcsdk.ConnectCache) {
 				log.Printf("NewDeviceConnect error: %s", err)
 				return
 			}
+			// 设置认证信息
+			instance.SetAuthorization("ApiAdmin", "a1234567")
 			// 打印设备主动注册信息
 			fmt.Printf("新的设备注册上来了: %+v\n", instance.InitiativeRegisterParams)
 
@@ -76,5 +78,5 @@ func main() {
 			"devices": res,
 		})
 	})
-	g.Run("8090")
+	g.Run(":8090")
 }

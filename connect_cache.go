@@ -136,8 +136,8 @@ func (c *ConnectCache) keeplive(key string, val ConnectCacheInstance) {
 				// 继续检测
 				continue
 			}
-			// 移除托管器
-			return
+			// 跳出循环
+			break
 		}
 	}
 }
