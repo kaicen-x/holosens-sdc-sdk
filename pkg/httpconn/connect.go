@@ -45,3 +45,10 @@ func (ci *Connect) LockHttpServer() *HttpServer {
 func (ci *Connect) Unlock() {
 	ci.mtx.Unlock()
 }
+
+// Close 关闭连接
+func (ci *Connect) Close() {
+	ci.mtx.Lock()
+	defer ci.mtx.Unlock()
+	ci.conn.Close()
+}

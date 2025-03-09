@@ -1,7 +1,7 @@
 /**
  * @Author: Bearki
  * @Date: 2025/03/02 00:17
- * @Description: 华为HoloSens SDC API北向接口目标识别库查询
+ * @Description: 华为HoloSens SDC API北向接口目标库查询
  */
 package recognize
 
@@ -13,8 +13,8 @@ import (
 
 // TargetLibQueryReplyData 目标库查询响应数据
 type TargetLibQueryReplyData struct {
-	FaceLibNum int             `json:"FaceLibNum"`    // 目标库总数
-	TargetLibs []TargetLibInfo `json:"FaceListsArry"` // 目标库列表
+	FaceLibNum int                    `json:"FaceLibNum"`    // 目标库总数
+	TargetLibs []TargetLibDetailsInfo `json:"FaceListsArry"` // 目标库列表
 }
 
 // TargetLibQueryReply 目标库查询响应

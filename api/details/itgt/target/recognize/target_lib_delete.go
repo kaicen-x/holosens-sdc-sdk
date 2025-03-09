@@ -1,7 +1,7 @@
 /**
  * @Author: Bearki
  * @Date: 2025/03/02 00:17
- * @Description: 华为HoloSens SDC API北向接口目标识别库删除
+ * @Description: 华为HoloSens SDC API北向接口目标库删除
  */
 package recognize
 
@@ -29,6 +29,7 @@ type TargetLibDeleteReply = common.Response[common.ResponseStatus]
 
 // TargetLibDelete 目标库删除
 //
+//	@param	params：目标库删除参数（TargetLibDeleteWithName：待删除的目标库名称，不填表示删除所有目标库）
 //	@return 异常信息
 func (p *Manager) TargetLibDelete(params ...TargetLibDeleteParam) error {
 	// 获取客户端

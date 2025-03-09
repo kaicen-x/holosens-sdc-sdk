@@ -19,12 +19,12 @@ type SubscribeAddParams struct {
 	//
 	// 用户名和密码只支持通过HTTPS加密传输，
 	// 若增加、更新订阅时采用HTTP链接，则忽略digUserName和digUserPwd字段信息
-	DigUserName *string `json:"digUserName,omitempty"`
+	DigUserName string `json:"digUserName"`
 	// 元数据URL 登入密码（选填）
 	//
 	// 用户名和密码只支持通过HTTPS加密传输，
 	// 若增加、更新订阅时采用HTTP链接，则忽略digUserName和digUserPwd字段信息
-	DigUserPwd *string `json:"digUserPwd,omitempty"`
+	DigUserPwd string `json:"digUserPwd"`
 }
 
 // SubscribeAddReplyData 智能元数据订阅添加响应数据

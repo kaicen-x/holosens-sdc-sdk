@@ -28,12 +28,12 @@ type SubscribeBaseInfo struct {
 	//	此字段固定填1
 	HttpsEnable int `json:"httpsEnable"`
 	// 服务端开放的元数据接收HTTP/HTTPS服务URL（选填）
-	MetaDataURL *string `json:"metaDataURL,omitempty"`
+	MetaDataURL string `json:"metaDataURL"`
 	// 是否上报图片（选填）
 	//
 	// 不携带此字段或此字段设置为1时上报图片
 	// 取值范围：0-不上报图片，1-上报图片
-	NeedUploadPic *int `json:"needUploadPic,omitempty"`
+	NeedUploadPic int `json:"needUploadPic"`
 }
 
 // Subscription 订阅信息

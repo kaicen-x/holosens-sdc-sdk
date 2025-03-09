@@ -56,6 +56,11 @@ func newConnectTrusteeship(conn net.Conn) *ConnectTrusteeship {
 	}
 }
 
+// Close 关闭托管器（同时会关闭Socket连接）
+func (p *ConnectTrusteeship) Close() {
+	p.connInstance.Close()
+}
+
 // GetHttp 获取基于Socket连接的HTTP托管器
 func (p *ConnectTrusteeship) GetHttp() *httpconn.Connect {
 	return p.connInstance

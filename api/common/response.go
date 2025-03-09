@@ -4,9 +4,9 @@ import "net/http"
 
 // ResponseStatus 通用响应状态对象
 type ResponseStatus struct {
-	RequestURL   string `json:"RequestURL,omitempty"` // 此响应对应请求的URL
-	StatusCode   int    `json:"StatusCode"`           // 响应码
-	StatusString string `json:"StatusString"`         // 请求出错时返回的描述信息
+	RequestURL   string `json:"RequestURL"`   // 此响应对应请求的URL
+	StatusCode   int    `json:"StatusCode"`   // 响应码
+	StatusString string `json:"StatusString"` // 请求出错时返回的描述信息
 }
 
 // Response 通用响应对象

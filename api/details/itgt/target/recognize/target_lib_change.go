@@ -1,7 +1,7 @@
 /**
  * @Author: Bearki
  * @Date: 2025/03/02 00:17
- * @Description: 华为HoloSens SDC API北向接口目标识别库修改
+ * @Description: 华为HoloSens SDC API北向接口目标库修改
  */
 package recognize
 
@@ -33,7 +33,7 @@ type TargetLibChangeReply = common.Response[common.ResponseStatus]
 
 // TargetLibChange 目标库修改
 //
-//	@return 目标库修改参数
+//	@param	params: 目标库修改参数
 //	@return 异常信息
 func (p *Manager) TargetLibChange(params TargetLibChangeParams) error {
 	// 获取客户端
