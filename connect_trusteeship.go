@@ -66,6 +66,20 @@ func (p *ConnectTrusteeship) GetHttp() *httpconn.Connect {
 	return p.connInstance
 }
 
+// IsSetAuthorization 是否已设置认证信息
+func (p *ConnectTrusteeship) IsSetAuthorization() bool {
+	client := p.GetHttp().LockHttpClient()
+	defer p.GetHttp().Unlock()
+	return client.IsSetAuthorization()
+}
+
+// BindAuthorizationChangeEvent 绑定认证信息修改事件
+func (p *ConnectTrusteeship) BindAuthorizationChangeEvent(callback func(isClear bool)) {
+	client := p.GetHttp().LockHttpClient()
+	defer p.GetHttp().Unlock()
+	client.BindAuthorizationChangeEvent(callback)
+}
+
 // SetAuthorization 设置连接认证信息
 func (p *ConnectTrusteeship) SetAuthorization(username, password string) {
 	client := p.GetHttp().LockHttpClient()

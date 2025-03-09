@@ -30,8 +30,9 @@ type HttpClient struct {
 	readTimeout  time.Duration // 消息读取超时时间
 	writeTimeout time.Duration // 消息发送超时时间
 
-	auth         *HttpClientAuth      // 认证信息
-	priProtoHead *PrivateProtocolHead // 私有协议头配置
+	auth            *HttpClientAuth      // 认证信息
+	authChangeEvent func(isClear bool)   // 认证信息修改事件
+	priProtoHead    *PrivateProtocolHead // 私有协议头配置
 }
 
 // NewHttpClient 创建基于Socket连接的HTTP客户端
@@ -55,12 +56,26 @@ func (c *HttpClient) SetTimeout(readTimeout, writeTimeout time.Duration) *HttpCl
 	return c
 }
 
+// IsSetAuthorization 是否已设置认证信息
+func (p *HttpClient) IsSetAuthorization() bool {
+	return p.auth != nil && p.auth.Type != HttpClientAuthTypeNone
+}
+
+// BindAuthorizationChangeEvent 绑定认证信息修改事件
+func (p *HttpClient) BindAuthorizationChangeEvent(callback func(isClear bool)) {
+	p.authChangeEvent = callback
+}
+
 // SetDigestAuth 设置Digest认证信息
 func (c *HttpClient) SetDigestAuth(username, password string) *HttpClient {
 	c.auth = &HttpClientAuth{
 		Type:     HttpClientAuthTypeDigest,
 		Username: username,
 		Password: password,
+	}
+	// 是否需要回调
+	if c.authChangeEvent != nil {
+		c.authChangeEvent(false)
 	}
 	// OK
 	return c
@@ -75,6 +90,10 @@ func (c *HttpClient) SetBasicAuth(username string, password ...string) *HttpClie
 	}
 	if len(password) > 0 {
 		c.auth.Password = password[0]
+	}
+	// 是否需要回调
+	if c.authChangeEvent != nil {
+		c.authChangeEvent(false)
 	}
 	// OK
 	return c

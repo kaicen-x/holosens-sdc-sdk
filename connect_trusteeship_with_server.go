@@ -7,6 +7,7 @@ package holosenssdcsdk
 
 import (
 	"net"
+	"net/http"
 
 	"github.com/bearki/holosens-sdc-sdk/api/application/device"
 	"github.com/bearki/holosens-sdc-sdk/pkg/httpconn"
@@ -34,7 +35,7 @@ func setPrivateProtocolHead(connTrusteeship *ConnectTrusteeship) {
 	})
 }
 
-// NewWithServer 新建服务端Socket连接托管器
+// NewWithServer 新建服务端Socket连接托管器（基于TCP服务器）
 //
 //	@param conn: 设备Socket连接通道
 //	@return 设备Socket连接托管器
@@ -50,6 +51,40 @@ func NewWithServer(conn net.Conn) (*ConnectTrusteeshipWithServer, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// 返回托管器
+	return &ConnectTrusteeshipWithServer{
+		ConnectTrusteeship:       connTrusteeship,
+		InitiativeRegisterParams: *params,
+	}, nil
+}
+
+// NewWithHttpServer 新建服务端Socket连接托管器（基于HTTP服务器）
+//
+//	@param w: 设备HTTP请求响应对象写入器
+//	@param r: 设备HTTP请求对象
+//	@return 设备Socket连接托管器
+//	@return 错误信息
+func NewWithHttpServer(w http.ResponseWriter, r *http.Request) (*ConnectTrusteeshipWithServer, error) {
+	// 处理请求
+	params, err := device.InitiativeRegister(w, r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return nil, err
+	}
+
+	// 接管HTTP的TCP连接
+	resController := http.NewResponseController(w)
+	conn, _, err := resController.Hijack()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return nil, err
+	}
+
+	// 创建设备Socket连接托管器
+	connTrusteeship := newConnectTrusteeship(conn)
+	// 设置私有协议头
+	setPrivateProtocolHead(connTrusteeship)
 
 	// 返回托管器
 	return &ConnectTrusteeshipWithServer{
