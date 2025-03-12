@@ -140,7 +140,6 @@ func (c *ConnectCache) keeplive(ctx context.Context, key string, instance Connec
 	// 心跳失败剩余缓冲次数
 	heartbeatMaxFailCount := 3
 	// 死循环开始
-KEEPLIVE_LOOP:
 	for {
 		select {
 		// 检查上下文是否终止
@@ -161,7 +160,7 @@ KEEPLIVE_LOOP:
 					continue
 				}
 				// 跳出循环
-				break KEEPLIVE_LOOP
+				return
 			}
 		}
 	}
@@ -214,6 +213,14 @@ func (c *ConnectCache) Set(key string, instance ConnectCacheInstance) {
 	})
 	// 赋值托管器
 	c.cacheMap[key] = cacheCtx
+	// 1分钟后检查设备是否仍然未配置认证信息
+	time.AfterFunc(time.Minute, func() {
+		// 是否未配置
+		if !instance.IsSetAuthorization() {
+			// 移除托管器
+			c.Remove(key)
+		}
+	})
 }
 
 // Delete 移除托管器
