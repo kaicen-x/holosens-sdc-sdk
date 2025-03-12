@@ -148,6 +148,11 @@ func (r *HttpClientRequest) Send() (*http.Response, error) {
 	if req == nil {
 		return nil, errors.Join(r.err, errors.New("request is nil"))
 	}
+	// 检查body
+	if req.Body == nil {
+		req.Body = http.NoBody
+		req.ContentLength = 0
+	}
 	// 检查是否存在缓存错误
 	if r.err != nil {
 		if req.Body != nil {

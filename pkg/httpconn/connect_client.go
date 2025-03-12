@@ -13,7 +13,9 @@ import (
 func internalWriteHttpRequest(cli *HttpClient, req *http.Request) error {
 	// 刷新写超时截止时间
 	if err := cli.conn.SetWriteDeadline(time.Now().Add(cli.writeTimeout)); err != nil {
-		req.Body.Close() // 发送前失败需要手动关闭传入的请求体
+		if req.Body != nil {
+			req.Body.Close() // 发送前失败需要手动关闭传入的请求体
+		}
 		return err
 	}
 	// 构建发送器
@@ -22,14 +24,18 @@ func internalWriteHttpRequest(cli *HttpClient, req *http.Request) error {
 	if cli.priProtoHead != nil {
 		// 处理私有协议头
 		if err := cli.priProtoHead.WriteRequestHead(connWriter); err != nil {
-			req.Body.Close() // 发送前失败需要手动关闭传入的请求体
+			if req.Body != nil {
+				req.Body.Close() // 发送前失败需要手动关闭传入的请求体
+			}
 			return err
 		}
 	}
 	// 发送请求
 	err := req.Write(connWriter)
 	if err != nil {
-		req.Body.Close() // 发送前失败需要手动关闭传入的请求体
+		if req.Body != nil {
+			req.Body.Close() // 发送前失败需要手动关闭传入的请求体
+		}
 		return err
 	}
 	// 刷写数据
@@ -50,13 +56,17 @@ func writeHttpRequest(cli *HttpClient, req *http.Request) error {
 		// 内部发送请求
 		err := internalWriteHttpRequest(cli, tmpReq)
 		if err != nil {
-			req.Body.Close() // 发送前失败需要手动关闭传入的请求体
+			if req.Body != nil {
+				req.Body.Close() // 发送前失败需要手动关闭传入的请求体
+			}
 			return err
 		}
 		// 读取响应
 		res, err := readHttpResponse(cli, tmpReq)
 		if err != nil {
-			req.Body.Close()
+			if req.Body != nil {
+				req.Body.Close() // 发送前失败需要手动关闭传入的请求体
+			}
 			return err
 		}
 		// 解析响应
