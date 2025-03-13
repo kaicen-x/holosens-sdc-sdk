@@ -97,7 +97,7 @@ func (c *HttpClient) SetBasicAuth(username string, password ...string) *HttpClie
 	if len(password) > 0 {
 		newPassword = password[0]
 	}
-	return c.setAuthorization(HttpClientAuthTypeDigest, username, newPassword)
+	return c.setAuthorization(HttpClientAuthTypeBasic, username, newPassword)
 }
 
 // SetPrivateProtocolHead 设置私有协议头
