@@ -66,37 +66,38 @@ func (p *HttpClient) BindAuthorizationChangeEvent(callback func(isClear bool)) {
 	p.authChangeEvent = callback
 }
 
-// SetDigestAuth 设置Digest认证信息
-func (c *HttpClient) SetDigestAuth(username, password string) *HttpClient {
-	c.auth = &HttpClientAuth{
-		Type:     HttpClientAuthTypeDigest,
-		Username: username,
-		Password: password,
-	}
+// 设置认证信息
+func (c *HttpClient) setAuthorization(authType HttpClientAuthType, user, pass string) *HttpClient {
 	// 是否需要回调
-	if c.authChangeEvent != nil {
+	if c.authChangeEvent != nil && (c.auth == nil ||
+		c.auth.Type != authType ||
+		c.auth.Username != user ||
+		c.auth.Password != pass) {
+		// 触发回调
 		c.authChangeEvent(false)
+		// 赋值新授权信息
+		c.auth = &HttpClientAuth{
+			Type:     authType,
+			Username: user,
+			Password: pass,
+		}
 	}
 	// OK
 	return c
 }
 
+// SetDigestAuth 设置Digest认证信息
+func (c *HttpClient) SetDigestAuth(username, password string) *HttpClient {
+	return c.setAuthorization(HttpClientAuthTypeDigest, username, password)
+}
+
 // SetBasicAuth 设置Basic认证信息
 func (c *HttpClient) SetBasicAuth(username string, password ...string) *HttpClient {
-	c.auth = &HttpClientAuth{
-		Type:     HttpClientAuthTypeBasic,
-		Username: username,
-		Password: "",
-	}
+	newPassword := ""
 	if len(password) > 0 {
-		c.auth.Password = password[0]
+		newPassword = password[0]
 	}
-	// 是否需要回调
-	if c.authChangeEvent != nil {
-		c.authChangeEvent(false)
-	}
-	// OK
-	return c
+	return c.setAuthorization(HttpClientAuthTypeDigest, username, newPassword)
 }
 
 // SetPrivateProtocolHead 设置私有协议头
