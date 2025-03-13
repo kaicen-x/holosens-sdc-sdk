@@ -75,12 +75,12 @@ func (c *HttpClient) setAuthorization(authType HttpClientAuthType, user, pass st
 		c.auth.Password != pass) {
 		// 触发回调
 		c.authChangeEvent(false)
-		// 赋值新授权信息
-		c.auth = &HttpClientAuth{
-			Type:     authType,
-			Username: user,
-			Password: pass,
-		}
+	}
+	// 赋值新授权信息
+	c.auth = &HttpClientAuth{
+		Type:     authType,
+		Username: user,
+		Password: pass,
 	}
 	// OK
 	return c
