@@ -28,7 +28,7 @@ type SubscribeBaseInfo struct {
 	//	此字段固定填1
 	HttpsEnable int `json:"httpsEnable"`
 	// 服务端开放的元数据接收HTTP/HTTPS服务URL（选填）
-	MetaDataURL string `json:"metaDataURL"`
+	MetaDataURL string `json:"metadataURL"`
 	// 是否上报图片（选填）
 	//
 	// 不携带此字段或此字段设置为1时上报图片
