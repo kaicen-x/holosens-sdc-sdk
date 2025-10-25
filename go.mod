@@ -1,4 +1,4 @@
-module github.com/bearki/holosens-sdc-sdk
+module github.com/kaicen-x/holosens-sdc-sdk
 
 go 1.22.5
 

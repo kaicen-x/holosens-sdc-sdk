@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 
-	holosenssdcsdk "github.com/bearki/holosens-sdc-sdk"
+	holosenssdcsdk "github.com/kaicen-x/holosens-sdc-sdk"
 )
 
 // 被动注册客户端

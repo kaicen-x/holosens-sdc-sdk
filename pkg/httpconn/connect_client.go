@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/bearki/holosens-sdc-sdk/pkg/digest"
+	"github.com/kaicen-x/holosens-sdc-sdk/pkg/digest"
 )
 
 // 内部发送HTTP请求（req中的请求体将会在发送后自动关闭）

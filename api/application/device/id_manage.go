@@ -1,5 +1,5 @@
 /**
- * @Author: Bearki
+ * @Author: Kaicen-X
  * @Date: 2025/03/02 00:17
  * @Description: 华为HoloSens SDC API北向接口设备ID管理
  */
@@ -8,7 +8,7 @@ package device
 import (
 	"errors"
 
-	"github.com/bearki/holosens-sdc-sdk/api/common"
+	"github.com/kaicen-x/holosens-sdc-sdk/api/common"
 )
 
 // IdInfo ID信息

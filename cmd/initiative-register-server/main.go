@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"log"
 
-	holosenssdcsdk "github.com/bearki/holosens-sdc-sdk"
-	"github.com/bearki/holosens-sdc-sdk/api/application/device"
 	"github.com/gin-gonic/gin"
+	holosenssdcsdk "github.com/kaicen-x/holosens-sdc-sdk"
+	"github.com/kaicen-x/holosens-sdc-sdk/api/application/device"
 )
 
 // 运行主动注册服务端
-func runSdcServer(socketCache *holosenssdcsdk.ConnectCache) {
+func runSdcServer(socketCache *holosenssdcsdk.SessionCache) {
 	// 加载证书和私钥
 	cert, err := tls.LoadX509KeyPair("server.crt", "server.key")
 	if err != nil {

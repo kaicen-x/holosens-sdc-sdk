@@ -1,5 +1,5 @@
 /**
- * @Author: Bearki
+ * @Author: Kaicen-X
  * @Date: 2025/03/02 00:17
  * @Description: 华为HoloSens SDC API北向接口智能元数据修改订阅
  */
@@ -8,7 +8,7 @@ package metadata
 import (
 	"errors"
 
-	"github.com/bearki/holosens-sdc-sdk/api/common"
+	"github.com/kaicen-x/holosens-sdc-sdk/api/common"
 )
 
 // SubscribeChangeParams 智能元数据订阅修改参数

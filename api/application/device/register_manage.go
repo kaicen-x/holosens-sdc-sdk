@@ -1,5 +1,5 @@
 /**
- * @Author: Bearki
+ * @Author: Kaicen-X
  * @Date: 2025/03/02 00:17
  * @Description: 华为HoloSens SDC API北向接口设备注册管理
  */
@@ -10,7 +10,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/bearki/holosens-sdc-sdk/api/common"
+	"github.com/kaicen-x/holosens-sdc-sdk/api/common"
 )
 
 // DeviceVersion 设备版本信息对象。

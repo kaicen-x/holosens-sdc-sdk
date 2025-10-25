@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	holosenssdcsdk "github.com/bearki/holosens-sdc-sdk"
 	"github.com/gin-gonic/gin"
+	holosenssdcsdk "github.com/kaicen-x/holosens-sdc-sdk"
 )
 
 // 服务端

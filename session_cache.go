@@ -1,7 +1,7 @@
 /**
- * @Author: Bearki
+ * @Author: Kaicen-X
  * @Date: 2025/03/02 00:17
- * @Description: 华为HoloSens SDC API北向接口设备Socket连接托管缓存
+ * @Description: 华为HoloSens SDC API北向接口设备Socket会话缓存
  */
 package holosenssdcsdk
 
@@ -12,62 +12,62 @@ import (
 	"sync"
 	"time"
 
-	"github.com/bearki/holosens-sdc-sdk/api/application/device"
+	"github.com/kaicen-x/holosens-sdc-sdk/api/application/device"
 )
 
 var (
-	// ErrCacheKeyNotFound：设备托管器不存在
+	// ErrCacheKeyNotFound：设备会话不存在
 	ErrCacheKeyNotFound = errors.New("key not found")
-	// ErrCacheInstanceTypeMismatch：设备托管器实例类型不匹配
+	// ErrCacheInstanceTypeMismatch：设备会话实例类型不匹配
 	ErrCacheInstanceTypeMismatch = errors.New("instance type mismatch")
 )
 
-// ConnectTrusteeshipWithServer 设备Socket连接托管器实例接口
-type ConnectCacheInstance interface {
-	// 托管器必须要实现关闭接口
+// SessionCacheIface 会话缓存接口
+type SessionCacheIface interface {
+	// 会话必须要实现关闭接口
 	Close()
-	// 托管器必须要实现是否已设置认证信息接口
+	// 会话必须要实现是否已设置认证信息接口
 	IsSetAuthorization() bool
-	// 托管器必须要实现绑定认证信息修改事件接口
+	// 会话必须要实现绑定认证信息修改事件接口
 	BindAuthorizationChangeEvent(func(isClear bool))
-	// 托管器必须要实现设备管理器接口
+	// 会话必须要实现设备管理器接口
 	DeviceManager() *device.Manager
 }
 
-// ConnectCacheContext 设备Socket连接托管缓存器上下文
-type ConnectCacheContext struct {
+// SessionCacheContext 会话缓存上下文
+type SessionCacheContext struct {
 	// 唯一标识
 	key string
-	// 设备Socket连接托管器实例
-	instance ConnectCacheInstance
+	// 会话缓存接口
+	instance SessionCacheIface
 	// 心跳上下文取消器互斥锁
 	keepliveCancelMtx sync.Mutex
 	// 心跳上下文取消器
 	keepliveCancel context.CancelFunc
 }
 
-// ConnectCache 设备Socket连接托管缓存器
-type ConnectCache struct {
+// SessionCache 会话缓存器
+type SessionCache struct {
 	rwMtx    sync.RWMutex                    // 读写锁
-	cacheMap map[string]*ConnectCacheContext // 缓存器
+	cacheMap map[string]*SessionCacheContext // 缓存数据
 }
 
-// NewConnectCache 创建设备Socket连接托管缓存器
-func NewConnectCache() *ConnectCache {
-	return &ConnectCache{
-		cacheMap: make(map[string]*ConnectCacheContext),
+// NewConnectCache 创建会话缓存器
+func NewConnectCache() *SessionCache {
+	return &SessionCache{
+		cacheMap: make(map[string]*SessionCacheContext),
 	}
 }
 
-// GetWithServer 服务端获取全部托管器
-func (c *ConnectCache) GetListWithServer() []*ConnectTrusteeshipWithServer {
+// GetListWithServer 获取全部服务端会话
+func (c *SessionCache) GetListWithServer() []*SessionWithServer {
 	// 加读锁
 	c.rwMtx.RLock()
 	defer c.rwMtx.RUnlock()
-	// 获取全部托管器
-	list := make([]*ConnectTrusteeshipWithServer, 0, len(c.cacheMap))
+	// 获取全部会话
+	list := make([]*SessionWithServer, 0, len(c.cacheMap))
 	for _, cacheCtx := range c.cacheMap {
-		if instance, ok := cacheCtx.instance.(*ConnectTrusteeshipWithServer); ok {
+		if instance, ok := cacheCtx.instance.(*SessionWithServer); ok {
 			list = append(list, instance)
 		}
 	}
@@ -75,19 +75,19 @@ func (c *ConnectCache) GetListWithServer() []*ConnectTrusteeshipWithServer {
 	sort.Slice(list, func(i, j int) bool {
 		return list[i].InitiativeRegisterParams.SerialNumber < list[j].InitiativeRegisterParams.SerialNumber
 	})
-	// 托管器不存在
+	// 会话不存在
 	return list
 }
 
-// GetWithClient 客户端获取全部托管器
-func (c *ConnectCache) GetListWithClient() []*ConnectTrusteeshipWithClient {
+// GetListWithClient 获取全部客户端会话
+func (c *SessionCache) GetListWithClient() []*SessionWithClient {
 	// 加读锁
 	c.rwMtx.RLock()
 	defer c.rwMtx.RUnlock()
-	// 获取全部托管器
-	list := make([]*ConnectTrusteeshipWithClient, 0, len(c.cacheMap))
+	// 获取全部会话
+	list := make([]*SessionWithClient, 0, len(c.cacheMap))
 	for _, cacheCtx := range c.cacheMap {
-		if instance, ok := cacheCtx.instance.(*ConnectTrusteeshipWithClient); ok {
+		if instance, ok := cacheCtx.instance.(*SessionWithClient); ok {
 			list = append(list, instance)
 		}
 	}
@@ -95,47 +95,47 @@ func (c *ConnectCache) GetListWithClient() []*ConnectTrusteeshipWithClient {
 	// sort.Slice(list, func(i, j int) bool {
 	// 	return list[i].InitiativeRegisterParams.SerialNumber < list[j].InitiativeRegisterParams.SerialNumber
 	// })
-	// 托管器不存在
+	// 会话不存在
 	return list
 }
 
-// GetWithServer 服务端获取托管器
-func (c *ConnectCache) GetWithServer(key string) (*ConnectTrusteeshipWithServer, error) {
+// GetWithServer 获取服务端会话
+func (c *SessionCache) GetWithServer(key string) (*SessionWithServer, error) {
 	// 加读锁
 	c.rwMtx.RLock()
 	defer c.rwMtx.RUnlock()
-	// 获取托管器
+	// 获取会话
 	if cacheCtx, ok := c.cacheMap[key]; ok {
-		if instance, ok := cacheCtx.instance.(*ConnectTrusteeshipWithServer); ok {
+		if instance, ok := cacheCtx.instance.(*SessionWithServer); ok {
 			return instance, nil
 		}
 		return nil, ErrCacheInstanceTypeMismatch
 	}
-	// 托管器不存在
+	// 会话不存在
 	return nil, ErrCacheKeyNotFound
 }
 
-// GetWithClient 客户端获取托管器
-func (c *ConnectCache) GetWithClient(key string) (*ConnectTrusteeshipWithClient, error) {
+// GetWithClient 获取客户端会话
+func (c *SessionCache) GetWithClient(key string) (*SessionWithClient, error) {
 	// 加读锁
 	c.rwMtx.RLock()
 	defer c.rwMtx.RUnlock()
-	// 获取托管器
+	// 获取会话
 	if cacheCtx, ok := c.cacheMap[key]; ok {
-		if instance, ok := cacheCtx.instance.(*ConnectTrusteeshipWithClient); ok {
+		if instance, ok := cacheCtx.instance.(*SessionWithClient); ok {
 			return instance, nil
 		}
 		return nil, ErrCacheInstanceTypeMismatch
 	}
-	// 托管器不存在
+	// 会话不存在
 	return nil, ErrCacheKeyNotFound
 }
 
 // KeepLive 心跳检测
 //
 //	心跳失败的设备将会移出缓存
-func (c *ConnectCache) keeplive(ctx context.Context, key string, instance ConnectCacheInstance) {
-	// 结束时移除托管器
+func (c *SessionCache) keeplive(ctx context.Context, key string, instance SessionCacheIface) {
+	// 结束时移除会话
 	defer c.Remove(key)
 	// 心跳失败剩余缓冲次数
 	heartbeatMaxFailCount := 3
@@ -166,19 +166,19 @@ func (c *ConnectCache) keeplive(ctx context.Context, key string, instance Connec
 	}
 }
 
-// Set 添加托管器
-func (c *ConnectCache) Set(key string, instance ConnectCacheInstance) {
+// Set 添加会话
+func (c *SessionCache) Set(key string, instance SessionCacheIface) {
 	// 加写锁
 	c.rwMtx.Lock()
 	defer c.rwMtx.Unlock()
 	// 是否存在同一个设备
 	if cacheCtx, ok := c.cacheMap[key]; ok {
-		// 移除托管器
+		// 移除会话
 		c.remove(key, cacheCtx)
 	}
 
-	// 创建托管器上下文
-	cacheCtx := &ConnectCacheContext{
+	// 创建会话上下文
+	cacheCtx := &SessionCacheContext{
 		key:            key,
 		instance:       instance,
 		keepliveCancel: nil,
@@ -211,20 +211,20 @@ func (c *ConnectCache) Set(key string, instance ConnectCacheInstance) {
 			go c.keeplive(keepliveCtx, key, cacheCtx.instance)
 		}
 	})
-	// 赋值托管器
+	// 赋值会话
 	c.cacheMap[key] = cacheCtx
 	// 1分钟后检查设备是否仍然未配置认证信息
 	time.AfterFunc(time.Minute, func() {
 		// 是否未配置
 		if !instance.IsSetAuthorization() {
-			// 移除托管器
+			// 移除会话
 			c.Remove(key)
 		}
 	})
 }
 
-// Delete 移除托管器
-func (c *ConnectCache) remove(key string, cacheCtx *ConnectCacheContext) {
+// 移除会话
+func (c *SessionCache) remove(key string, cacheCtx *SessionCacheContext) {
 	// 心跳上下文取消器互斥锁
 	cacheCtx.keepliveCancelMtx.Lock()
 	defer cacheCtx.keepliveCancelMtx.Unlock()
@@ -237,12 +237,12 @@ func (c *ConnectCache) remove(key string, cacheCtx *ConnectCacheContext) {
 	cacheCtx.instance.Close()
 	// 清空实例
 	cacheCtx.instance = nil
-	// 移除托管器
+	// 移除会话
 	delete(c.cacheMap, key)
 }
 
-// Delete 移除托管器
-func (c *ConnectCache) Remove(key string) {
+// Delete 移除会话
+func (c *SessionCache) Remove(key string) {
 	// 加写锁
 	c.rwMtx.Lock()
 	defer c.rwMtx.Unlock()

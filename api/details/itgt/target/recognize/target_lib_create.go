@@ -1,5 +1,5 @@
 /**
- * @Author: Bearki
+ * @Author: Kaicen-X
  * @Date: 2025/03/02 00:17
  * @Description: 华为HoloSens SDC API北向接口目标库新建
  */
@@ -8,7 +8,7 @@ package recognize
 import (
 	"errors"
 
-	"github.com/bearki/holosens-sdc-sdk/api/common"
+	"github.com/kaicen-x/holosens-sdc-sdk/api/common"
 )
 
 // TargetLibCreateParams 目标库新建参数

@@ -1,13 +1,13 @@
 /**
- * @Author: Bearki
+ * @Author: Kaicen-X
  * @Date: 2025/03/02 00:17
  * @Description: 华为HoloSens SDC API北向接口目标相关模块
  */
 package target
 
 import (
-	"github.com/bearki/holosens-sdc-sdk/api/details/itgt/target/recognize"
-	"github.com/bearki/holosens-sdc-sdk/pkg/httpconn"
+	"github.com/kaicen-x/holosens-sdc-sdk/api/details/itgt/target/recognize"
+	"github.com/kaicen-x/holosens-sdc-sdk/pkg/httpconn"
 )
 
 // Manager 目标相关管理器

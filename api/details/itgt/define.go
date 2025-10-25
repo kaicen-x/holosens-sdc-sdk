@@ -1,13 +1,13 @@
 /**
- * @Author: Bearki
+ * @Author: Kaicen-X
  * @Date: 2025/03/02 00:17
  * @Description: 华为HoloSens SDC API北向接口智能分析模块
  */
 package itgt
 
 import (
-	"github.com/bearki/holosens-sdc-sdk/api/details/itgt/target"
-	"github.com/bearki/holosens-sdc-sdk/pkg/httpconn"
+	"github.com/kaicen-x/holosens-sdc-sdk/api/details/itgt/target"
+	"github.com/kaicen-x/holosens-sdc-sdk/pkg/httpconn"
 )
 
 // Manager 智能分析管理器

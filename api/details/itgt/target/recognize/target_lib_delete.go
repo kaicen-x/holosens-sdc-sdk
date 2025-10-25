@@ -1,5 +1,5 @@
 /**
- * @Author: Bearki
+ * @Author: Kaicen-X
  * @Date: 2025/03/02 00:17
  * @Description: 华为HoloSens SDC API北向接口目标库删除
  */
@@ -9,7 +9,7 @@ import (
 	"errors"
 	"net/url"
 
-	"github.com/bearki/holosens-sdc-sdk/api/common"
+	"github.com/kaicen-x/holosens-sdc-sdk/api/common"
 )
 
 // TargetLibDeleteParam 目标库删除参数构造器

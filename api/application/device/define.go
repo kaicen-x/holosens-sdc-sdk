@@ -1,12 +1,12 @@
 /**
- * @Author: Bearki
+ * @Author: Kaicen-X
  * @Date: 2025/03/02 00:17
  * @Description: 华为HoloSens SDC API北向接口设备管理与维护模块
  */
 package device
 
 import (
-	"github.com/bearki/holosens-sdc-sdk/pkg/httpconn"
+	"github.com/kaicen-x/holosens-sdc-sdk/pkg/httpconn"
 )
 
 // Manager 设备管理与维护管理器
