@@ -38,7 +38,7 @@ type SessionCacheIface interface {
 type SessionCacheContext struct {
 	// 唯一标识
 	key string
-	// 会话缓存接口
+	// 会话实例
 	instance SessionCacheIface
 	// 心跳上下文取消器互斥锁
 	keepliveCancelMtx sync.Mutex

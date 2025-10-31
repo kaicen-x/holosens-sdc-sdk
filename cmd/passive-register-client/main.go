@@ -17,7 +17,7 @@ func main() {
 	defer conn.Close()
 
 	// 托管连接
-	deviceConnect := holosenssdcsdk.NewWithClient(conn)
+	deviceConnect := holosenssdcsdk.NewWithTcpClient(conn)
 	// 设置北向接口认证信息
 	deviceConnect.SetAuthorization("ApiAdmin", "a1234567")
 

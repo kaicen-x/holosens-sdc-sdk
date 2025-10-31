@@ -42,7 +42,7 @@ func runSdcServer(socketCache *holosenssdcsdk.SessionCache) {
 		// 处理每个连接
 		go func() {
 			// 构建设备连接实例
-			instance, err := holosenssdcsdk.NewWithServer(conn)
+			instance, err := holosenssdcsdk.NewWithTcpServer(conn)
 			if err != nil {
 				log.Printf("NewDeviceConnect error: %s", err)
 				return
